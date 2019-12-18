@@ -1,7 +1,7 @@
 
 import numpy as np
 
-class CognitiveAssistent:
+class CognitiveAssistant:
     def __init__(self, name = None, ScriptGraph = None):
         self.name = name
         self.ScriptGraph = ScriptGraph
@@ -14,9 +14,12 @@ class CognitiveAssistent:
 
             
 class ScriptGraphVert:
-    def __init__(self, name = None, text = ""):
+    def __init__(self, name = None, texts = None,
+            is_terminal = False, is_start = True):
         self.name = name
-        self.text = text
+        if texts is None:
+            texts = []
+        self.texts = texts
         self.next_states = []
         self.is_terminal = is_terminal
         self.is_start = is_start
@@ -24,16 +27,17 @@ class ScriptGraphVert:
     def dialogue(self, user_state):
         if user_state is None:
             if self.is_start:
-                # ...
+                user_state = np.zeros((300,))
             else:
                 return None
         self.text_generator()
         return self.make_a_choice(), user_state
 
     def text_generator(self):
-        print(text)
+        for text in self.texts:
+            print(text)
 
-    def add_child(self, edge = None, name = None, text = None, cond = None):
+    def add_edge(self, edge = None, name = None, text = None, cond = None):
         if is_terminal:
             print("You can not to add children into terminal vertices")
             return None
@@ -57,4 +61,3 @@ class edge:
     def __init__(self, next_vert, cond):
         self.next_vert = next_vert
         self.cond = cond
-
