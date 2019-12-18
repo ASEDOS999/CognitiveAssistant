@@ -6,11 +6,11 @@ class CognitiveAssistant:
         self.name = name
         self.ScriptGraph = ScriptGraph
 
-    def dialogue_start(self, N):
-        vert = ScriptGraph
+    def dialogue_start(self):
+        vert = self.ScriptGraph
         self.user_state = None
         while not vert is None:
-            vert, user_state = vert.dialogue()
+            vert, self.user_state = vert.dialogue(self.user_state)
 
             
 class ScriptGraphVert:
@@ -37,25 +37,24 @@ class ScriptGraphVert:
         for text in self.texts:
             print(text)
 
-    def add_edge(self, edge = None, name = None, text = None, cond = None):
-        if is_terminal:
+    def add_edge(self, new_edge = None, child = None, cond = None):
+        if self.is_terminal:
             print("You can not to add children into terminal vertices")
             return None
-        if edge is None:
-            new_child = ScriptGraphVert(name = name, text = text)
-            edge = new_child, cond
-        self.edge.append(new_edge)
+        if new_edge is None:
+            new_edge = edge(child, cond)
+        self.next_states.append(new_edge)
     
     def make_a_choice(self):
         def dist(s1, s2):
             return int(s1==s2)
-        if len(self.children) == 0:
+        if len(self.next_states) == 0:
             return None
-        else:
-            return self.edges
+        if len(self.next_states) == 1:
+            return self.next_states[0].next_vert
         s = input()
-        ind = np.argmax(np.array([dist(i.cond, s) for i in self.edges]))
-        return self.edges[ind].next_vert
+        ind = np.argmax(np.array([dist(i.cond, s) for i in self.next_states]))
+        return self.next_states[ind].next_vert
         
 class edge:
     def __init__(self, next_vert, cond):
